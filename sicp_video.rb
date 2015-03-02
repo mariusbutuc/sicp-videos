@@ -1,8 +1,6 @@
 require 'open-uri'
 
 class SicpVideo
-  attr_accessor :id, :title
-
   def initialize(id, title)
     @id = id
     @title = title
@@ -30,11 +28,24 @@ class SicpVideo
 
   private
 
-  def download(file_out, url)
+  def download(file_out, consistent_url)
+    url = increase_astonishment_for consistent_url
+
     File.open(file_out, "wb") do |saved_file|
       open(url, "rb") do |read_file|
         saved_file.write(read_file.read)
       end
+    end
+  end
+
+  def increase_astonishment_for(url)
+    case @title
+    when 'Streams, Part 2', 'Compilation'
+      url.gsub('/lec', '/Lec')
+    when 'Register Machines', 'Explicit-control Evaluator'
+      url.gsub('_512kb', '')
+    else
+      url
     end
   end
 end
